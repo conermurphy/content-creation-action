@@ -1,10 +1,10 @@
 {
-  "name": "003-content-creation-action",
+  "name": "content-creation-action",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "ncc build src/action.ts -o dist"
   },
   "repository": {
     "type": "git",
@@ -37,5 +37,10 @@
     "eslint-plugin-react-hooks": "^4.3.0",
     "prettier": "^2.5.1",
     "typescript": "^4.6.2"
+  },
+  "dependencies": {
+    "@octokit/graphql": "^4.8.0",
+    "@octokit/types": "^6.34.0",
+    "@vercel/ncc": "^0.33.3"
   }
 }
