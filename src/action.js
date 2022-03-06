@@ -10,7 +10,7 @@ const LABELS = {
 
 async function run() {
   const GITHUB_TOKEN = core.getInput('PAT_TOKEN');
-  const PROJECT_TO_ADD_TO = core.getInput('PROJECTS_TO_ADD_ISSUE_TO');
+  const PROJECT_TO_ADD_TO = core.getInput('PROJECT_TO_ADD_TO');
 
   const { eventName } = github.context;
 
@@ -132,7 +132,9 @@ async function run() {
 
   // Step 3: Create new issue in target repository with next stage title based on the column name moved to.
 
-  await graphqlWithAuth(
+  const {
+    issue: { id: issueId },
+  } = await graphqlWithAuth(
     `
       mutation CreateTicket(
         $repo: ID!
@@ -140,7 +142,6 @@ async function run() {
         $assignee: [ID!]
         $labels: [ID!]
         $template: String
-        $projects: [ID!]
       ) {
         createIssue(
           input: {
@@ -149,7 +150,6 @@ async function run() {
             assigneeIds: $assignee
             labelIds: $labels
             issueTemplate: $template
-            projectIds: $projects
           }
         ) {
           issue {
@@ -165,8 +165,24 @@ async function run() {
       assignee: [userGlobalNodeId],
       labels: labelIds,
       template: currentTicketStage,
-      projects: [PROJECT_TO_ADD_TO],
     }
+  );
+
+  // Step 4: Add new issue to the target project
+
+  await graphqlWithAuth(
+    `
+      mutation AddItem($projectId: ID!, $issueId: ID!) {
+        addProjectNextItem(
+          input: { projectId: $projectId, contentId: $issueID }
+        ) {
+          projectNextItem {
+            id
+          }
+        }
+      }
+    `,
+    { issueId, projectID: PROJECT_TO_ADD_TO }
   );
 }
 
