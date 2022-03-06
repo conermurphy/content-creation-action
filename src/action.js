@@ -39,7 +39,7 @@ async function run() {
 
   // Split on last / in URL and destructure value following as it will be issue number. E.g. https://api.github.com/repos/api-playground/projects-test/issues/3 will become 3.
 
-  const [, issueNumber] = parseInt(contentUrl.split(/\/(?=[^/]+$)/));
+  const [, issueNumber] = contentUrl.split(/\/(?=[^/]+$)/);
   const [, projectId] = projectUrl.split(/\/(?=[^/]+$)/);
 
   const {
@@ -80,7 +80,7 @@ async function run() {
     {
       owner,
       repoName,
-      issueNumber,
+      issueNumber: parseInt(issueNumber),
     }
   );
 
