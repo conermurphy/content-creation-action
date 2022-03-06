@@ -8569,7 +8569,13 @@ async function run() {
         ) {
           issue {
             id
-            labels
+            labels(first: 100) {
+              edges {
+                node {
+                  id
+                }
+              }
+            }
             number
           }
         }
