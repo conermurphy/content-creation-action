@@ -45,6 +45,8 @@ async function run() {
   core.info(projectId);
   core.info(typeof projectId);
 
+  core.info(newColumnId);
+
   const {
     repository: {
       issue: { title },
@@ -92,7 +94,7 @@ async function run() {
 
   const [{ node: contentCreationProject }] = projects.edges.filter(
     ({ node }) => {
-      return node.databaseId === projectId;
+      return node.databaseId === parseInt(projectId);
     }
   );
 

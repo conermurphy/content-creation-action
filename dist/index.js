@@ -8471,6 +8471,8 @@ async function run() {
   _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(projectId);
   _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(typeof projectId);
 
+  _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(newColumnId);
+
   const {
     repository: {
       issue: { title },
@@ -8518,7 +8520,7 @@ async function run() {
 
   const [{ node: contentCreationProject }] = projects.edges.filter(
     ({ node }) => {
-      return node.databaseId === projectId;
+      return node.databaseId === parseInt(projectId);
     }
   );
 
