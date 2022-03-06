@@ -3,8 +3,8 @@ description: "Automatically create new tickets when moving tickets in a project"
 author: "Coner Murphy"
 
 inputs:
-  GITHUB_TOKEN:
-    description: "GitHub token"
+  PAT_TOKEN:
+    description: "Personal Access Token"
     required: true
   PROJECTS_TO_ADD_ISSUE_TO:
     description: "Project IDs to add the issue to"
