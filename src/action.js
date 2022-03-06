@@ -65,6 +65,7 @@ async function run() {
             edges {
               node {
                 id
+                databaseId
                 name
                 columns(first: 100) {
                   edges {
@@ -91,7 +92,7 @@ async function run() {
 
   const [{ node: contentCreationProject }] = projects.edges.filter(
     ({ node }) => {
-      return node.id === projectId;
+      return node.databaseId === projectId;
     }
   );
 
