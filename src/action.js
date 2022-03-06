@@ -2,8 +2,15 @@ import core from '@actions/core';
 import github from '@actions/github';
 import { graphql } from '@octokit/graphql';
 
+const LABELS = {
+  PLANNING: 'LA_kwDOG8CoYM7oD9GW',
+  PRODUCTION: 'LA_kwDOG8CoYM7oeOsf',
+  POST_PRODUCTION: 'LA_kwDOG8CoYM7oeOwb',
+};
+
 async function run() {
   const GITHUB_TOKEN = core.getInput('GITHUB_TOKEN');
+  const PROJECT_TO_ADD_TO = core.getInput('PROJECT_TO_ADD_TO');
 
   const { eventName } = github.context;
 
@@ -27,7 +34,7 @@ async function run() {
       content_url: contentUrl,
       project_url: projectUrl,
     },
-    sender: { login: owner },
+    sender: { login: owner, node_id: userGlobalNodeId },
   } = github.context.payload;
 
   if (action !== 'moved') {
@@ -43,7 +50,7 @@ async function run() {
 
   const {
     repository: {
-      issue: { title },
+      issue: { title, labels },
       projects,
     },
   } = await graphqlWithAuth(
@@ -56,6 +63,13 @@ async function run() {
         repository(owner: $owner, name: $repoName) {
           issue(number: $issueNumber) {
             title
+            labels(first:100) {
+              edges {
+                node {
+                  id
+                }
+              }
+            }
           }
           projects(first: 100) {
             edges {
@@ -102,15 +116,38 @@ async function run() {
   const currentTicketStage = contentCreationColumns[newColumnId];
   const newTicketTitle = `[${currentTicketStage}]: ${title}`;
 
+  if (currentTicketStage === 'PUBLISHED' || currentTicketStage === 'TO DO') {
+    return;
+  }
+
+  const labelIds = labels.edges
+    .filter(({ node }) => {
+      return node.id !== 'LA_kwDOG8CoYM7n8qyh';
+    })
+    .push(LABELS[currentTicketStage]);
+
   // Step 3: Create new issue in target repository with next stage title based on the column name moved to.
 
   await graphqlWithAuth(
     `
-      mutation CreateTicketOnContentCreation(
+      mutation CreateTicket(
         $repo: ID!
         $issueTitle: String!
+        $assignee: [ID!]
+        $labels: [ID!]
+        $template: String
+        $projects: [ID!]
       ) {
-        createIssue(input: { repositoryId: $repo, title: $issueTitle }) {
+        createIssue(
+          input: {
+            repositoryId: $repo
+            title: $issueTitle
+            assigneeIds: $assignee
+            labelIds: $labels
+            issueTemplate: $template
+            projectIds: $projects
+          }
+        ) {
           issue {
             id
             title
@@ -121,6 +158,10 @@ async function run() {
     {
       repo: repoNodeId,
       issueTitle: newTicketTitle,
+      assignee: [userGlobalNodeId],
+      labels: labelIds,
+      template: currentTicketStage,
+      projects: [PROJECT_TO_ADD_TO],
     }
   );
 }
