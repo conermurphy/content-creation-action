@@ -177,7 +177,7 @@ async function run() {
         }
       }
     `,
-    { issueId, projectID: PROJECT_TO_ADD_TO }
+    { issueId, projectId: PROJECT_TO_ADD_TO }
   );
 }
 
