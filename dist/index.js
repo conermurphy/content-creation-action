@@ -8428,19 +8428,21 @@ var __webpack_exports__ = {};
 
 
 
-const GITHUB_TOKEN = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('GITHUB_TOKEN');
-const { eventName } = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context;
-
-const graphqlWithAuth = _octokit_graphql__WEBPACK_IMPORTED_MODULE_2__.graphql.defaults({
-  headers: {
-    authorization: GITHUB_TOKEN,
-  },
-});
-
 async function run() {
+  const GITHUB_TOKEN = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('GITHUB_TOKEN');
+  const PAT_TOKEN = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('PAT_TOKEN');
+
+  const { eventName } = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context;
+
   if (eventName !== 'project_card') {
     return;
   }
+
+  const graphqlWithAuth = _octokit_graphql__WEBPACK_IMPORTED_MODULE_2__.graphql.defaults({
+    headers: {
+      Authorization: `token ${PAT_TOKEN}`,
+    },
+  });
 
   // Step 1: Destructure out info from the event (moving a project card) trigging the action.
 
@@ -8452,7 +8454,7 @@ async function run() {
       content_url: contentUrl,
       project_url: projectUrl,
     },
-    sender: { name: username },
+    sender: { login: owner },
   } = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload;
 
   if (action !== 'moved') {
@@ -8471,7 +8473,7 @@ async function run() {
       issue: { title },
       projects,
     },
-  } = await graphqlWithAuth(
+  } = await (0,_octokit_graphql__WEBPACK_IMPORTED_MODULE_2__.graphql)(
     `
       query FindIssuesInRepo(
         $owner: String!
@@ -8487,14 +8489,14 @@ async function run() {
               node {
                 id
                 name
-                  columns(first: 100) {
-                    edges {
-                      node {
-                        name
-                        id
-                      }
+                columns(first: 100) {
+                  edges {
+                    node {
+                      name
+                      id
                     }
                   }
+                }
               }
             }
           }
@@ -8502,9 +8504,12 @@ async function run() {
       }
     `,
     {
-      owner: username,
+      owner,
       repoName,
       issueNumber,
+      headers: {
+        Authorization: `token ${PAT_TOKEN}`,
+      },
     }
   );
 
@@ -8541,8 +8546,6 @@ async function run() {
       issueTitle: newTicketTitle,
     }
   );
-
-  console.log(issue);
 }
 
 run();
