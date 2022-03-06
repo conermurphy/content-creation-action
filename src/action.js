@@ -7,7 +7,7 @@ const { eventName } = github.context;
 
 const graphqlWithAuth = graphql.defaults({
   headers: {
-    authorization: GITHUB_TOKEN,
+    authorization: `token ${GITHUB_TOKEN}`,
   },
 });
 
@@ -26,7 +26,7 @@ async function run() {
       content_url: contentUrl,
       project_url: projectUrl,
     },
-    sender: { name: username },
+    sender: { name: owner },
   } = github.context.payload;
 
   if (action !== 'moved') {
@@ -76,7 +76,7 @@ async function run() {
       }
     `,
     {
-      owner: username,
+      owner,
       repoName,
       issueNumber,
     }
