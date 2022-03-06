@@ -50,7 +50,12 @@ async function run() {
 
   const {
     repository: {
-      issue: { title, id: originalIssueId, body: originalIssueBody },
+      issue: {
+        title,
+        id: originalIssueId,
+        body: originalIssueBody,
+        number: originalIssueNumber,
+      },
       projects,
     },
   } = await graphqlWithAuth(
@@ -62,6 +67,8 @@ async function run() {
       ) {
         repository(owner: $owner, name: $repoName) {
           issue(number: $issueNumber) {
+            id
+            number
             title
             body
             labels(first:100) {
@@ -129,6 +136,7 @@ async function run() {
         id: issueId,
         labels: { edges: issueLabels },
         number: newIssueNumber,
+        body: newIssueBody,
       },
     },
   } = await graphqlWithAuth(
@@ -155,6 +163,7 @@ async function run() {
               }
             }
             number
+            body
           }
         }
       }
@@ -166,7 +175,7 @@ async function run() {
     }
   );
 
-  // Step 4: Update issue to add in tag for individual stage in the process
+  // Step 4: Update issue to add in labels and body for individual stage in the process and reference to parent ticket.
 
   const updatedLabels = issueLabels.map(({ node }) => {
     return node.id;
@@ -174,10 +183,16 @@ async function run() {
 
   updatedLabels.push(LABELS[currentTicketStage]);
 
+  const newIssueUpdatedBody = `
+  - Parent Ticket: ${originalIssueNumber}
+  ---
+  ${newIssueBody}
+  `;
+
   await graphqlWithAuth(
     `
-      mutation UpdateIssueWithLabel($issueId: ID!, $labels: [ID!]) {
-        updateIssue(input: { id: $issueId, labelIds: $labels }) {
+      mutation UpdateIssueWithLabel($issueId: ID!, $labels: [ID!], $body: String) {
+        updateIssue(input: { id: $issueId, labelIds: $labels, body: $body }) {
           issue {
             id
           }
@@ -187,6 +202,7 @@ async function run() {
     {
       issueId,
       labels: updatedLabels,
+      body: newIssueUpdatedBody,
     }
   );
 
