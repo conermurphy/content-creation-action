@@ -2,14 +2,12 @@ import core from '@actions/core';
 import github from '@actions/github';
 import { graphql } from '@octokit/graphql';
 
-const GITHUB_TOKEN = core.getInput('GITHUB_TOKEN');
+const PAT_TOKEN = core.getInput('PAT_TOKEN');
 const { eventName } = github.context;
-
-console.log(GITHUB_TOKEN);
 
 const graphqlWithAuth = graphql.defaults({
   headers: {
-    authorization: `token ${GITHUB_TOKEN}`,
+    authorization: `token ${PAT_TOKEN}`,
   },
 });
 
@@ -117,8 +115,6 @@ async function run() {
       issueTitle: newTicketTitle,
     }
   );
-
-  console.log(issue);
 }
 
 run();
