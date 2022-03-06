@@ -8500,6 +8500,7 @@ async function run() {
                     node {
                       name
                       id
+                      databaseId
                     }
                   }
                 }
@@ -8526,13 +8527,13 @@ async function run() {
 
   const contentCreationColumns = contentCreationProject.columns.edges.reduce(
     (acc, { node }) => {
-      acc[node.id] = node.name.toUpperCase();
+      acc[node.databaseId] = node.name.toUpperCase();
       return acc;
     },
     {}
   );
 
-  const currentTicketStage = contentCreationColumns[newColumnId.toString()];
+  const currentTicketStage = contentCreationColumns[newColumnId];
   const newTicketTitle = `[${currentTicketStage}]: ${title}`;
 
   // Step 3: Create new issue in target repository with next stage title based on the column name moved to.
