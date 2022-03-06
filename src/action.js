@@ -42,6 +42,8 @@ async function run() {
   const [, issueNumber] = contentUrl.split(/\/(?=[^/]+$)/);
   const [, projectId] = projectUrl.split(/\/(?=[^/]+$)/);
 
+  core.info(projectId);
+
   const {
     repository: {
       issue: { title },
@@ -83,6 +85,8 @@ async function run() {
       issueNumber: parseInt(issueNumber),
     }
   );
+
+  core.info(projects);
 
   const [{ node: contentCreationProject }] = projects.edges.filter(
     ({ node }) => {

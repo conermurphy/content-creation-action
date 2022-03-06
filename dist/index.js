@@ -8468,6 +8468,8 @@ async function run() {
   const [, issueNumber] = contentUrl.split(/\/(?=[^/]+$)/);
   const [, projectId] = projectUrl.split(/\/(?=[^/]+$)/);
 
+  _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(projectId);
+
   const {
     repository: {
       issue: { title },
@@ -8509,6 +8511,8 @@ async function run() {
       issueNumber: parseInt(issueNumber),
     }
   );
+
+  _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(projects);
 
   const [{ node: contentCreationProject }] = projects.edges.filter(
     ({ node }) => {
