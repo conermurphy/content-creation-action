@@ -14,7 +14,7 @@ async function run() {
 
   const graphqlWithAuth = graphql.defaults({
     headers: {
-      Authorization: `Bearer ${PAT_TOKEN}`,
+      Authorization: `token ${PAT_TOKEN}`,
     },
   });
 
@@ -82,7 +82,7 @@ async function run() {
       repoName,
       issueNumber,
       headers: {
-        Authorization: `Bearer ${PAT_TOKEN}`,
+        Authorization: `token ${PAT_TOKEN}`,
       },
     }
   );
