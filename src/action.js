@@ -82,7 +82,7 @@ async function run() {
       repoName,
       issueNumber,
       headers: {
-        Authorization: `token ${GITHUB_TOKEN}`,
+        Authorization: `bearer ${GITHUB_TOKEN}`,
       },
     }
   );
