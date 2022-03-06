@@ -47,7 +47,7 @@ async function run() {
       issue: { title },
       projects,
     },
-  } = await graphqlWithAuth(
+  } = await graphql(
     `
       query FindIssuesInRepo(
         $owner: String!
@@ -63,14 +63,14 @@ async function run() {
               node {
                 id
                 name
-                  columns(first: 100) {
-                    edges {
-                      node {
-                        name
-                        id
-                      }
+                columns(first: 100) {
+                  edges {
+                    node {
+                      name
+                      id
                     }
                   }
+                }
               }
             }
           }
@@ -81,6 +81,9 @@ async function run() {
       owner,
       repoName,
       issueNumber,
+      headers: {
+        Authorization: `token ${GITHUB_TOKEN}`,
+      },
     }
   );
 
