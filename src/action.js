@@ -7,7 +7,7 @@ const { eventName } = github.context;
 
 const graphqlWithAuth = graphql.defaults({
   headers: {
-    authorization: `Bearer ${GITHUB_TOKEN}`,
+    authorization: `bearer ${GITHUB_TOKEN}`,
   },
 });
 
