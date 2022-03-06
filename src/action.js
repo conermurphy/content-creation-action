@@ -10,7 +10,7 @@ const LABELS = {
 
 async function run() {
   const GITHUB_TOKEN = core.getInput('GITHUB_TOKEN');
-  const PROJECT_TO_ADD_TO = core.getInput('PROJECT_TO_ADD_TO');
+  const PROJECT_TO_ADD_TO = core.getInput('PROJECTS_TO_ADD_ISSUE_TO');
 
   const { eventName } = github.context;
 

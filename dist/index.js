@@ -8436,7 +8436,7 @@ const LABELS = {
 
 async function run() {
   const GITHUB_TOKEN = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('GITHUB_TOKEN');
-  const PROJECT_TO_ADD_TO = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('PROJECT_TO_ADD_TO');
+  const PROJECT_TO_ADD_TO = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('PROJECTS_TO_ADD_ISSUE_TO');
 
   const { eventName } = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context;
 
