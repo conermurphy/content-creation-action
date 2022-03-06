@@ -8473,7 +8473,7 @@ async function run() {
       issue: { title },
       projects,
     },
-  } = await (0,_octokit_graphql__WEBPACK_IMPORTED_MODULE_2__.graphql)(
+  } = await graphqlWithAuth(
     `
       query FindIssuesInRepo(
         $owner: String!

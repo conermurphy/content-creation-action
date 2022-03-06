@@ -47,7 +47,7 @@ async function run() {
       issue: { title },
       projects,
     },
-  } = await graphql(
+  } = await graphqlWithAuth(
     `
       query FindIssuesInRepo(
         $owner: String!
