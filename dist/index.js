@@ -8481,6 +8481,7 @@ async function run() {
         id: originalIssueId,
         body: originalIssueBody,
         number: originalIssueNumber,
+        labels: originalLabels,
       },
       projects,
     },
@@ -8603,14 +8604,18 @@ async function run() {
 
   // Step 4: Update issue to add in labels and body for individual stage in the process and reference to parent ticket.
 
-  const updatedLabels = issueLabels.map(({ node }) => {
-    return node.id;
-  });
+  const updatedLabels = issueLabels
+    .filter(({ node }) => {
+      return node.id !== 'LA_kwDOG8CoYM7n8qyh';
+    })
+    .map(({ node }) => {
+      return node.id;
+    });
 
   updatedLabels.push(LABELS[currentTicketStage]);
 
   const newIssueUpdatedBody = `
-  - Parent Ticket: ${originalIssueNumber}
+  - Parent Ticket: #${originalIssueNumber}
   ---
   ${newIssueBody}
   `;
