@@ -84,24 +84,29 @@ async function run() {
     }
   );
 
-  const contentCreationColumns = projects.edges
-    .filter(({ node }) => {
+  const [{ node: contentCreationProject }] = projects.edges.filter(
+    ({ node }) => {
       return node.id === projectId;
-    })
-    .reduce((acc, cur) => {
-      acc[cur.id] = cur.name.toUpperCase();
+    }
+  );
+
+  const contentCreationColumns = contentCreationProject.columns.edges.reduce(
+    (acc, { node }) => {
+      acc[node.id] = node.name.toUpperCase();
       return acc;
-    }, {});
+    },
+    {}
+  );
 
   const currentTicketStage = contentCreationColumns[newColumnId.toString()];
   const newTicketTitle = `[${currentTicketStage}]: ${title}`;
 
   // Step 3: Create new issue in target repository with next stage title based on the column name moved to.
 
-  const { issue } = await graphqlWithAuth(
+  await graphqlWithAuth(
     `
       mutation CreateTicketOnContentCreation(
-        $repo: String!
+        $repo: ID!
         $issueTitle: String!
       ) {
         createIssue(input: { repositoryId: $repo, title: $issueTitle }) {
