@@ -5,6 +5,8 @@ import { graphql } from '@octokit/graphql';
 const GITHUB_TOKEN = core.getInput('GITHUB_TOKEN');
 const { eventName } = github.context;
 
+console.log(GITHUB_TOKEN);
+
 const graphqlWithAuth = graphql.defaults({
   headers: {
     authorization: `token ${GITHUB_TOKEN}`,
