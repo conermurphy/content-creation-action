@@ -55,7 +55,7 @@ async function run() {
         id: originalIssueId,
         body: originalIssueBody,
         number: originalIssueNumber,
-        labels: originalLabels,
+        labels: { edges: originalLabels },
       },
       projects,
     },
@@ -133,12 +133,7 @@ async function run() {
 
   const {
     createIssue: {
-      issue: {
-        id: issueId,
-        labels: { edges: issueLabels },
-        number: newIssueNumber,
-        body: newIssueBody,
-      },
+      issue: { id: issueId, number: newIssueNumber, body: newIssueBody },
     },
   } = await graphqlWithAuth(
     `
@@ -178,7 +173,7 @@ async function run() {
 
   // Step 4: Update issue to add in labels and body for individual stage in the process and reference to parent ticket.
 
-  const updatedLabels = issueLabels
+  const updatedLabels = originalLabels
     .filter(({ node }) => {
       return node.id !== 'LA_kwDOG8CoYM7n8qyh';
     })
