@@ -2,19 +2,19 @@ import core from '@actions/core';
 import github from '@actions/github';
 import { graphql } from '@octokit/graphql';
 
-const GITHUB_TOKEN = core.getInput('GITHUB_TOKEN');
-const { eventName } = github.context;
-
-const graphqlWithAuth = graphql.defaults({
-  headers: {
-    authorization: `bearer ${GITHUB_TOKEN}`,
-  },
-});
-
 async function run() {
+  const GITHUB_TOKEN = core.getInput('GITHUB_TOKEN');
+  const { eventName } = github.context;
+
   if (eventName !== 'project_card') {
     return;
   }
+
+  const graphqlWithAuth = graphql.defaults({
+    headers: {
+      Authorization: `Bearer ${GITHUB_TOKEN}`,
+    },
+  });
 
   // Step 1: Destructure out info from the event (moving a project card) trigging the action.
 
