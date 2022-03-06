@@ -8460,7 +8460,7 @@ async function run() {
       content_url: contentUrl,
       project_url: projectUrl,
     },
-    sender: { login: owner, node_id: userGlobalNodeId },
+    sender: { login: owner },
   } = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload;
 
   if (action !== 'moved') {
@@ -8476,7 +8476,7 @@ async function run() {
 
   const {
     repository: {
-      issue: { title, labels },
+      issue: { title, id: originalIssueId, body: originalIssueBody },
       projects,
     },
   } = await graphqlWithAuth(
@@ -8489,6 +8489,7 @@ async function run() {
         repository(owner: $owner, name: $repoName) {
           issue(number: $issueNumber) {
             title
+            body
             labels(first:100) {
               edges {
                 node {
@@ -8546,21 +8547,11 @@ async function run() {
     return;
   }
 
-  const labelIds = labels.edges
-    .filter(({ node }) => {
-      return node.id !== 'LA_kwDOG8CoYM7n8qyh';
-    })
-    .map(({ node }) => {
-      return node.id;
-    });
-
-  labelIds.push(LABELS[currentTicketStage]);
-
   // Step 3: Create new issue in target repository with next stage title based on the column name moved to.
 
   const {
     createIssue: {
-      issue: { id: issueId },
+      issue: { id: issueId, labels: issueLabels, number: newIssueNumber },
     },
   } = await graphqlWithAuth(
     `
@@ -8578,6 +8569,8 @@ async function run() {
         ) {
           issue {
             id
+            labels
+            number
           }
         }
       }
@@ -8589,7 +8582,31 @@ async function run() {
     }
   );
 
-  // Step 4: Add new issue to the target project
+  // Step 4: Update issue to add in tag for individual stage in the process
+
+  const updatedLabels = issueLabels.map(({ node }) => {
+    return node.id;
+  });
+
+  updatedLabels.push(LABELS[currentTicketStage]);
+
+  await graphqlWithAuth(
+    `
+      mutation UpdateIssueWithLabel($issueId: ID!, $labels: [ID!]) {
+        updateIssue(input: { id: $issueId, labelIds: $labels }) {
+          issue {
+            id
+          }
+        }
+      }
+    `,
+    {
+      issueId,
+      labels: updatedLabels,
+    }
+  );
+
+  // Step 5: Add new issue to the provided project
 
   await graphqlWithAuth(
     `
@@ -8604,6 +8621,29 @@ async function run() {
       }
     `,
     { issueId, projectId: PROJECT_TO_ADD_TO }
+  );
+
+  // Step 6: Update body of the original parent issue to add a link to new sub issue
+
+  const updatedBody = `
+  ${originalIssueBody}
+  - ${currentTicketStage}: #${newIssueNumber}
+  `;
+
+  await graphqlWithAuth(
+    `
+      mutation UpdateOriginalIssue($issueId: ID!, $body: String) {
+        updateIssue(input: { id: $issueId, body: $body }) {
+          issue {
+            id
+          }
+        }
+      }
+    `,
+    {
+      issueId: originalIssueId,
+      body: updatedBody,
+    }
   );
 }
 
