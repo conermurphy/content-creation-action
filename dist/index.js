@@ -8431,7 +8431,7 @@ var __webpack_exports__ = {};
 const LABELS = {
   PLANNING: 'LA_kwDOG8CoYM7oD9GW',
   PRODUCTION: 'LA_kwDOG8CoYM7oeOsf',
-  POST_PRODUCTION: 'LA_kwDOG8CoYM7oeOwb',
+  'POST-PRODUCTION': 'LA_kwDOG8CoYM7oeOwb',
 };
 
 async function run() {
