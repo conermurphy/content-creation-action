@@ -136,19 +136,15 @@ async function run() {
     issue: { id: issueId },
   } = await graphqlWithAuth(
     `
-      mutation CreateTicket(
+      mutation CreateIssue(
         $repo: ID!
         $issueTitle: String!
-        $assignee: [ID!]
-        $labels: [ID!]
         $template: String
       ) {
         createIssue(
           input: {
             repositoryId: $repo
             title: $issueTitle
-            assigneeIds: $assignee
-            labelIds: $labels
             issueTemplate: $template
           }
         ) {
@@ -162,8 +158,6 @@ async function run() {
     {
       repo: repoNodeId,
       issueTitle: newTicketTitle,
-      assignee: [userGlobalNodeId],
-      labels: labelIds,
       template: currentTicketStage,
     }
   );
