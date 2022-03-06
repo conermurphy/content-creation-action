@@ -2,12 +2,12 @@ import core from '@actions/core';
 import github from '@actions/github';
 import { graphql } from '@octokit/graphql';
 
-const PAT_TOKEN = core.getInput('PAT_TOKEN');
+const GITHUB_TOKEN = core.getInput('GITHUB_TOKEN');
 const { eventName } = github.context;
 
 const graphqlWithAuth = graphql.defaults({
   headers: {
-    authorization: `token ${PAT_TOKEN}`,
+    authorization: `Bearer ${GITHUB_TOKEN}`,
   },
 });
 
