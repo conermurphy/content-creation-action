@@ -39,7 +39,7 @@ async function run() {
 
   // Split on last / in URL and destructure value following as it will be issue number. E.g. https://api.github.com/repos/api-playground/projects-test/issues/3 will become 3.
 
-  const [, issueNumber] = contentUrl.split(/\/(?=[^/]+$)/);
+  const [, issueNumber] = parseInt(contentUrl.split(/\/(?=[^/]+$)/));
   const [, projectId] = projectUrl.split(/\/(?=[^/]+$)/);
 
   const {
@@ -52,7 +52,7 @@ async function run() {
       query FindIssuesInRepo(
         $owner: String!
         $repoName: String!
-        $issueNumber: String!
+        $issueNumber: Int!
       ) {
         repository(owner: $owner, name: $repoName) {
           issue(number: $issueNumber) {
