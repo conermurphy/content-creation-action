@@ -8595,7 +8595,7 @@ async function run() {
     `
       mutation AddItem($projectId: ID!, $issueId: ID!) {
         addProjectNextItem(
-          input: { projectId: $projectId, contentId: $issueID }
+          input: { projectId: $projectId, contentId: $issueId }
         ) {
           projectNextItem {
             id
