@@ -8478,7 +8478,7 @@ async function run() {
       query FindIssuesInRepo(
         $owner: String!
         $repoName: String!
-        $issueNumber: Int!
+        $issueNumber: String!
       ) {
         repository(owner: $owner, name: $repoName) {
           issue(number: $issueNumber) {
@@ -8507,9 +8507,6 @@ async function run() {
       owner,
       repoName,
       issueNumber,
-      headers: {
-        Authorization: `token ${PAT_TOKEN}`,
-      },
     }
   );
 
