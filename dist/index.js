@@ -8430,7 +8430,6 @@ var __webpack_exports__ = {};
 
 async function run() {
   const GITHUB_TOKEN = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('GITHUB_TOKEN');
-  const PAT_TOKEN = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('PAT_TOKEN');
 
   const { eventName } = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context;
 
@@ -8440,7 +8439,7 @@ async function run() {
 
   const graphqlWithAuth = _octokit_graphql__WEBPACK_IMPORTED_MODULE_2__.graphql.defaults({
     headers: {
-      Authorization: `token ${PAT_TOKEN}`,
+      Authorization: `token ${GITHUB_TOKEN}`,
     },
   });
 
@@ -8467,11 +8466,6 @@ async function run() {
 
   const [, issueNumber] = contentUrl.split(/\/(?=[^/]+$)/);
   const [, projectId] = projectUrl.split(/\/(?=[^/]+$)/);
-
-  _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(projectId);
-  _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(typeof projectId);
-
-  _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(newColumnId);
 
   const {
     repository: {
@@ -8516,8 +8510,6 @@ async function run() {
       issueNumber: parseInt(issueNumber),
     }
   );
-
-  _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(JSON.stringify(projects));
 
   const [{ node: contentCreationProject }] = projects.edges.filter(
     ({ node }) => {

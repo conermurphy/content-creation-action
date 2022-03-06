@@ -4,7 +4,6 @@ import { graphql } from '@octokit/graphql';
 
 async function run() {
   const GITHUB_TOKEN = core.getInput('GITHUB_TOKEN');
-  const PAT_TOKEN = core.getInput('PAT_TOKEN');
 
   const { eventName } = github.context;
 
@@ -14,7 +13,7 @@ async function run() {
 
   const graphqlWithAuth = graphql.defaults({
     headers: {
-      Authorization: `token ${PAT_TOKEN}`,
+      Authorization: `token ${GITHUB_TOKEN}`,
     },
   });
 
@@ -41,11 +40,6 @@ async function run() {
 
   const [, issueNumber] = contentUrl.split(/\/(?=[^/]+$)/);
   const [, projectId] = projectUrl.split(/\/(?=[^/]+$)/);
-
-  core.info(projectId);
-  core.info(typeof projectId);
-
-  core.info(newColumnId);
 
   const {
     repository: {
@@ -90,8 +84,6 @@ async function run() {
       issueNumber: parseInt(issueNumber),
     }
   );
-
-  core.info(JSON.stringify(projects));
 
   const [{ node: contentCreationProject }] = projects.edges.filter(
     ({ node }) => {
