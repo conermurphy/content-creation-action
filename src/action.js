@@ -43,6 +43,7 @@ async function run() {
   const [, projectId] = projectUrl.split(/\/(?=[^/]+$)/);
 
   core.info(projectId);
+  core.info(typeof projectId);
 
   const {
     repository: {
@@ -86,7 +87,7 @@ async function run() {
     }
   );
 
-  core.info(projects);
+  core.info(JSON.stringify(projects));
 
   const [{ node: contentCreationProject }] = projects.edges.filter(
     ({ node }) => {
