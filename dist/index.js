@@ -8551,7 +8551,11 @@ async function run() {
 
   const {
     createIssue: {
-      issue: { id: issueId, labels: issueLabels, number: newIssueNumber },
+      issue: {
+        id: issueId,
+        labels: { edges: issueLabels },
+        number: newIssueNumber,
+      },
     },
   } = await graphqlWithAuth(
     `
