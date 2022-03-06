@@ -12,9 +12,11 @@ async function run() {
 
   const graphqlWithAuth = graphql.defaults({
     headers: {
-      Authorization: `Bearer ${GITHUB_TOKEN}`,
+      Authorization: `bearer ${GITHUB_TOKEN}`,
     },
   });
+
+  console.log(GITHUB_TOKEN);
 
   // Step 1: Destructure out info from the event (moving a project card) trigging the action.
 
