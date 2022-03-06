@@ -184,7 +184,7 @@ async function run() {
   updatedLabels.push(LABELS[currentTicketStage]);
 
   const newIssueUpdatedBody = `
-  - Parent Ticket: #${originalIssueNumber}
+  Parent Ticket: #${originalIssueNumber}
   ---
   ${newIssueBody}
   `;
