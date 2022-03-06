@@ -133,7 +133,9 @@ async function run() {
   // Step 3: Create new issue in target repository with next stage title based on the column name moved to.
 
   const {
-    issue: { id: issueId },
+    createIssue: {
+      issue: { id: issueId },
+    },
   } = await graphqlWithAuth(
     `
       mutation CreateIssue(
@@ -150,7 +152,6 @@ async function run() {
         ) {
           issue {
             id
-            title
           }
         }
       }
