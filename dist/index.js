@@ -8550,7 +8550,11 @@ async function run() {
     .filter(({ node }) => {
       return node.id !== 'LA_kwDOG8CoYM7n8qyh';
     })
-    .push(LABELS[currentTicketStage]);
+    .map(({ node }) => {
+      return node.id;
+    });
+
+  labelIds.push(LABELS[currentTicketStage]);
 
   // Step 3: Create new issue in target repository with next stage title based on the column name moved to.
 
