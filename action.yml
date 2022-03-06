@@ -8,6 +8,7 @@ inputs:
     required: true
   PROJECTS_TO_ADD_ISSUE_TO:
     description: "Project IDs to add the issue to"
+    required: true
 
 runs:
   using: "node16"
