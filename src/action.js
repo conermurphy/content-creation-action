@@ -8,6 +8,37 @@ const LABELS = {
   'POST-PRODUCTION': 'LA_kwDOG8CoYM7oeOwb',
 };
 
+const ISSUE_BODIES = {
+  PLANNING: `
+## Keyword Research
+> *What keywords will this piece of content target?*
+
+## Coverage / Inspiration
+> *How well covered is this topic on the chosen publishing platform? What is special about existing high performing content? How can it inspire my piece of content?*
+
+## Concept
+> *What is the main concept of this piece of content? How should the content flow? What will the consumer take away from this content? What’s the value in it?*
+
+## Outline
+> *Outline the content below*
+
+### Intro
+
+### Upfront Conclusion
+
+### Main Body
+
+### Conclusion/Outro
+  `,
+  'POST-PRODUCTION': `
+## Titles
+> *10 possible titles, 🌟 favourites*
+
+## Thumbnail / Featured Images
+> *3 Version of thumbnails / featured images*
+  `
+}
+
 async function run() {
   const GITHUB_TOKEN = core.getInput('PAT_TOKEN');
   const PROJECT_TO_ADD_TO = core.getInput('PROJECT_TO_ADD_TO');
@@ -133,7 +164,7 @@ async function run() {
 
   const {
     createIssue: {
-      issue: { id: issueId, number: newIssueNumber, body: newIssueBody },
+      issue: { id: issueId, number: newIssueNumber },
     },
   } = await graphqlWithAuth(
     `
@@ -184,9 +215,9 @@ async function run() {
   updatedLabels.push(LABELS[currentTicketStage]);
 
   const newIssueUpdatedBody = `
-  Parent Ticket: #${originalIssueNumber}
+  - Parent Ticket: #${originalIssueNumber}
   ---
-  ${newIssueBody}
+  ${ISSUE_BODIES[currentTicketStage]}
   `;
 
   await graphqlWithAuth(
@@ -227,6 +258,8 @@ async function run() {
 
   const updatedBody = `
   ${originalIssueBody}
+  ---
+  ## Linked Issues
   - ${currentTicketStage}: #${newIssueNumber}
   `;
 
