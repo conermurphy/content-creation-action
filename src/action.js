@@ -125,7 +125,7 @@ async function run() {
   const currentTicketStage = contentCreationColumns[newColumnId];
   const newTicketTitle = `[${currentTicketStage}]: ${title}`;
 
-  if (currentTicketStage === 'PUBLISHED' || currentTicketStage === 'TO DO') {
+  if (!['PLANNING', 'PRODUCTION', 'POST-PRODUCTION'].includes(currentTicketStage)) {
     return;
   }
 
