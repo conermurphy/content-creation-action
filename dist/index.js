@@ -8462,8 +8462,8 @@ const ISSUE_BODIES = {
 
 ## Thumbnail / Featured Images
 > *3 Version of thumbnails / featured images*
-  `
-}
+  `,
+};
 
 async function run() {
   const GITHUB_TOKEN = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('PAT_TOKEN');
@@ -8582,7 +8582,9 @@ async function run() {
   const currentTicketStage = contentCreationColumns[newColumnId];
   const newTicketTitle = `[${currentTicketStage}]: ${title}`;
 
-  if (!['PLANNING', 'PRODUCTION', 'POST-PRODUCTION'].includes(currentTicketStage)) {
+  if (
+    !['PLANNING', 'PRODUCTION', 'POST-PRODUCTION'].includes(currentTicketStage)
+  ) {
     return;
   }
 
@@ -8641,10 +8643,9 @@ async function run() {
   updatedLabels.push(LABELS[currentTicketStage]);
 
   const newIssueUpdatedBody = `
-  - Parent Ticket: #${originalIssueNumber}
-  ---
-  ${ISSUE_BODIES[currentTicketStage]}
-  `;
+- Parent Ticket: #${originalIssueNumber}
+---
+${ISSUE_BODIES[currentTicketStage]}`;
 
   await graphqlWithAuth(
     `
@@ -8684,10 +8685,9 @@ async function run() {
 
   const updatedBody = `
   ${originalIssueBody}
-  ---
-  ## Linked Issues
-  - ${currentTicketStage}: #${newIssueNumber}
-  `;
+---
+## Linked Issues
+- ${currentTicketStage}: #${newIssueNumber}`;
 
   await graphqlWithAuth(
     `
